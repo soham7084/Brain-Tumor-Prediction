@@ -1,7 +1,35 @@
+# ===============================
+# Virtual Environments
+# ===============================
 venv/
 env/
 ENV/
+
+# ===============================
+# Python Bytecode & Cache
+# ===============================
 __pycache__/
 *.py[cod]
-static/image/
+*$py.class
+
+# ===============================
+# Jupyter Notebooks
+# ===============================
 .ipynb_checkpoints/
+
+# ===============================
+# Datasets & Training Data
+# ===============================
+dataset/
+
+# ===============================
+# Large Model Weights (>100MB)
+# ===============================
+model.h5
+*.h5
+
+# ===============================
+# Runtime Uploads & Generated Media
+# ===============================
+static/image/*
+!static/image/.gitkeep
