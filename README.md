@@ -135,3 +135,195 @@ Structured collection of MRI imaging data utilized across training and evaluatio
 
 * **`dataset/Training/`:** Subcategorized into `glioma_tumor/`, `meningioma_tumor/`, `no_tumor/`, and `pituitary_tumor/` containing the primary model training images[cite: 3].
 * **`dataset/Testing/`:** Contains the holdout validation image splits across identical subcategory folders to evaluate model generalization and accuracy[cite: 3].
+```markdown
+## 💻 Local Setup & Execution Guide
+
+Follow these instructions to set up, configure, and execute the application locally on your PC.
+
+---
+
+### 1. Prerequisites
+
+Ensure your system meets the following environment requirements:
+
+- **Operating System:** Windows 10/11, macOS, or Linux
+- **Python Version:** **Python 3.10** *(Recommended for compatibility with TensorFlow 2.13.1 and Keras 2.13.1)*[cite: 2, 5]
+- **Core File Checklist:** Verify that the following files are located in your root project folder before starting:
+  - `app.py`[cite: 1]
+  - `prediction.py`[cite: 4]
+  - `model.h5`[cite: 4]
+  - `requirements`[cite: 5]
+  - `templates/home.html`[cite: 1]
+  - `templates/predict.html`[cite: 1]
+
+---
+
+### 2. Initial Setup (One-Time Configuration)
+
+#### Step 1: Open Terminal in Project Directory
+Navigate to the root directory where the project is stored:
+
+- **Command Prompt (`cmd`):**
+  ```cmd
+  cd /d "D:\Deep learning\Brain-Tumor-Prediction-Flask-App-master"
+
+```
+
+* **PowerShell:**
+```powershell
+cd "D:\Deep learning\Brain-Tumor-Prediction-Flask-App-master"
+
+```
+
+
+
+#### Step 2: Create a Virtual Environment
+
+Generate an isolated virtual environment named `venv`:
+
+```cmd
+python -m venv venv
+
+```
+
+#### Step 3: Activate the Virtual Environment
+
+Activate the environment based on your chosen terminal:
+
+* **Command Prompt (`cmd`):**
+```cmd
+venv\Scripts\activate
+
+```
+
+
+* **PowerShell:**
+*(If execution policy prevents activation, run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` first)*
+```powershell
+.\venv\Scripts\Activate.ps1
+
+```
+
+
+* **macOS / Linux:**
+```bash
+source venv/bin/activate
+
+```
+
+
+
+> **Verification:** The prompt should now be prefixed with `(venv)`:
+> ```text
+> (venv) D:\Deep learning\Brain-Tumor-Prediction-Flask-App-master>
+> 
+> ```
+> 
+> 
+
+#### Step 4: Install Dependencies
+
+Upgrade `pip` and install the project packages:
+
+```cmd
+python -m pip install --upgrade pip
+pip install -r requirements
+
+```
+
+#### Step 5: Verify Model Setup
+
+Ensure the pre-trained weights file (`model.h5`) loads without error:
+
+```cmd
+python -c "import prediction; print('Model loaded successfully!')"
+
+```
+
+---
+
+### 3. Running the Server
+
+Whenever you want to start the application (including after rebooting your PC):
+
+1. **Activate the virtual environment (if not already active):**
+* **Command Prompt (`cmd`):** `venv\Scripts\activate`
+* **PowerShell:** `.\venv\Scripts\Activate.ps1`
+* **macOS / Linux:** `source venv/bin/activate`
+
+
+2. **Start the Flask application:**
+
+```cmd
+python app.py
+
+```
+
+
+3. **Open the Web Interface:**
+Once the console outputs `* Running on http://127.0.0.1:5000`, open your browser and navigate to:
+
+
+[http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+
+4. **Perform a Prediction:**
+
+* Click **Choose File** and select an MRI scan (`.jpg`, `.jpeg`, or `.png`).
+
+
+* Click **Predict** to view the classified tumor class and confidence percentage.
+
+
+
+
+5. **Stop the Application:**
+Press `Ctrl + C` in the running terminal window to shut down the server.
+
+---
+
+### 4. Testing the REST API (Optional)
+
+The application provides a REST endpoint for automated, programmatic predictions:
+
+* **Endpoint:** `POST http://127.0.0.1:5000/api/predict`
+
+* **Body:** `multipart/form-data`
+
+* **Key:** `file`
+
+
+#### Example cURL Request:
+
+```bash
+curl -X POST [http://127.0.0.1:5000/api/predict](http://127.0.0.1:5000/api/predict) -F "file=@path/to/mri_image.jpg"
+
+```
+
+#### Expected Response Format:
+
+```json
+{
+  "confidence": 97.85,
+  "diagnosis": "meningioma_tumor",
+  "filename": "mri_image.jpg",
+  "success": true
+}
+
+```
+
+---
+
+### 5. Windows 1-Click Launch Shortcut (Optional)
+
+To start the application with a single double-click without manually opening a terminal:
+
+1. Create a file named `run_app.bat` in your project root folder.
+2. Add the following script:
+```cmd
+@echo off
+cd /d "%~dp0"
+call venv\Scripts\activate.bat
+python app.py
+pause
+
+3. Double-click `run_app.bat` anytime to launch the server and open the command prompt automatically.
