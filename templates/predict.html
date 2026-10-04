@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Complete</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Modern Space/Neon Theme (Matches Home Page) */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: white;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0f0f16 100%);
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1000px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 200, 255, 0.3);
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0b0;
+            margin-bottom: 40px;
+        }
+
+        .subtitle i {
+            color: #00ff88; /* Success green icon */
+            margin-left: 8px;
+        }
+
+        /* Glassmorphism Card for Results */
+        .results-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 200, 255, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            display: flex;
+            gap: 50px;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            align-items: center;
+        }
+
+        /* Left Side: Uploaded Image */
+        .image-section {
+            flex: 1;
+        }
+
+        .scan-frame {
+            border: 2px dashed rgba(0, 200, 255, 0.5);
+            border-radius: 16px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            box-shadow: 0 0 30px rgba(0, 200, 255, 0.1) inset;
+        }
+
+        .scan-frame img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+
+        /* Right Side: Data and Results */
+        .info-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+        .result-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .label {
+            font-size: 1.1rem;
+            color: #888899;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Dynamic Diagnostic Badge */
+        .diagnosis-badge {
+            background: rgba(255, 60, 60, 0.15);
+            border: 1px solid #ff4444;
+            color: #ff6666;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            text-transform: capitalize;
+            text-shadow: 0 0 10px rgba(255, 60, 60, 0.5);
+            box-shadow: 0 0 20px rgba(255, 60, 60, 0.1);
+            width: fit-content;
+        }
+
+        /* If the prediction is "no_tumor", we override the red with green using Jinja logic below */
+        .diagnosis-badge.safe {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: #00ff88;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+        }
+
+        /* Progress Bar Styling */
+        .confidence-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.1);
+            height: 14px;
+            border-radius: 10px;
+            flex-grow: 1;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #00c8ff, #0077ff);
+            height: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #00c8ff;
+            transition: width 1s ease-in-out;
+        }
+
+        .confidence-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00c8ff;
+        }
+
+        /* Return Button */
+        .btn-return {
+            margin-top: 20px;
+            background: transparent;
+            color: white;
+            border: 2px solid #00c8ff;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            width: fit-content;
+        }
+
+        .btn-return:hover {
+            background: rgba(0, 200, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 200, 255, 0.3);
+            color: #00e5ff;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 800px) {
+            .results-card {
+                flex-direction: column;
+                gap: 30px;
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <h1>ANALYSIS COMPLETE</h1>
+        <p class="subtitle">AI scan processing finished successfully <i class="fa-solid fa-circle-check"></i></p>
+
+        <div class="results-card">
+            
+            <div class="image-section">
+                <div class="scan-frame">
+                    <img src="{{ url_for('static', filename='image/' + filename) }}" alt="MRI Scan">
+                </div>
+            </div>
+
+            <div class="info-section">
+                
+                <div class="result-group">
+                    <span class="label">Diagnosis:</span>
+                    
+                    {% set is_safe = 'no_tumor' in predicted_class %}
+                    <div class="diagnosis-badge {% if is_safe %}safe{% endif %}">
+                        {% if is_safe %}
+                            <i class="fa-solid fa-shield-check"></i>
+                        {% else %}
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        {% endif %}
+                        
+                        {{ predicted_class | replace('_', ' ') | title }} 
+                    </div>
+                </div>
+
+                <div class="result-group">
+                    <span class="label">Confidence Level:</span>
+                    <div class="confidence-wrapper">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: {{ confidence }}%;"></div>
+                        </div>
+                        <span class="confidence-text">{{ "%.1f"|format(confidence|float) }}%</span>
+                    </div>
+                </div>
+
+                <a href="/" class="btn-return">
+                    <i class="fa-solid fa-rotate-left"></i> Scan Another Image
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
